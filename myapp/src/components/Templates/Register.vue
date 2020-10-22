@@ -13,7 +13,7 @@
       <label for="password">password</label>:
       <input id="password" type="password" v-model="password" />
     </div>
-    <p>{{ errorMessage }}</p>
+    <p>{{ getErrorMessage }}</p>
     <button class="btn is-blue" @click="register()">新規登録</button>
     <div>
       <router-link :to="{ name: 'login' }">ログインはこちらから</router-link>
@@ -22,34 +22,22 @@
 </template>
 
 <script>
-import firebase from 'firebase';
-
 export default {
   data() {
     return {
       name: '',
       email: '',
       password: '',
-      errorMessage: '',
     };
+  },
+  computed: {
+    getErrorMessage() {
+      return this.$store.getErrorMessage;
+    },
   },
   methods: {
     register() {
-      const _this = this;
-
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .then(function(results) {
-          results.user.updateProfile({
-            displayName: _this.name,
-          });
-
-          _this.$router.push({ name: 'users' });
-        })
-        .catch(function(error) {
-          _this.errorMessage = error.message;
-        });
+      this.$store.dispatch('register', this);
     },
   },
 };
