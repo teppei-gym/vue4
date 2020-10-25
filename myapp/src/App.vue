@@ -8,26 +8,23 @@
 </template>
 
 <script>
-import firebase from "firebase";
-
 export default {
   data() {
     return {
-      auth: false
+      auth: false,
     };
   },
   methods: {
     logout() {
-      console.log("todo");
-    }
+      console.log('todo');
+    },
   },
   created() {
     const _this = this;
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) _this.auth = true;
+    this.$store.dispatch('auth').then((status) => {
+      if (status) _this.aith = status;
     });
-  }
+  },
 };
 </script>
 

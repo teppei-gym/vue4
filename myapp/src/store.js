@@ -37,6 +37,13 @@ export default new Vuex.Store({
       // Todo
       // firebase.auth().signOut();
       // this.auth = false;
+    },
+    auth() {
+      return new Promise(resolve => {
+        firebase.auth().onAuthStateChanged(user => {
+          if (user) resolve(true);
+        })
+      });
     }
   },
-})
+});
