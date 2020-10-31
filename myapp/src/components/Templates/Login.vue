@@ -9,6 +9,7 @@
       <label for="password">password</label>:
       <input id="password" type="password" v-model="password" />
     </div>
+    <p v-if="errorMessage">{{ errorMessage }}</p>
     <button class="btn is-blue" @click="signIn()">Login</button>
   </div>
 </template>
@@ -19,14 +20,17 @@ export default {
     return {
       email: '',
       password: '',
+      errorMessage: '',
     };
   },
   methods: {
     signIn() {
       if (this.email === '' || this.password === '') {
-        alert('未入力項目があります');
+        this.errorMessage = '未入力項目があります';
         return;
       }
+
+      this.errorMessage = '';
 
       this.$store.dispatch('signIn', this);
     },
