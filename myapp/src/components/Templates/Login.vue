@@ -17,19 +17,19 @@
 export default {
   data() {
     return {
-      email: "",
-      password: ""
+      email: '',
+      password: '',
     };
   },
   methods: {
     signIn() {
-      if (this.email === "" || this.password === "") {
-        alert("未入力項目があります");
+      if (this.email === '' || this.password === '') {
+        alert('未入力項目があります');
         return;
       }
 
-      this.$store.dispatch("signIn", this);
-    }
-  }
+      this.$store.dispatch('signIn', this);
+    },
+  },
 };
 </script>

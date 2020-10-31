@@ -20,9 +20,8 @@ export default {
     },
   },
   created() {
-    const _this = this;
     this.$store.dispatch('auth').then((status) => {
-      if (status) _this.aith = status;
+      if (status) this.auth = status;
     });
   },
 };
