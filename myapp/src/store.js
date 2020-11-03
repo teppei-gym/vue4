@@ -6,26 +6,27 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   actions: {
-    register(context, info) {
+    register(context, user) {
       firebase
         .auth()
-        .createUserWithEmailAndPassword(info.email, info.password)
+        .createUserWithEmailAndPassword(user.email, user.password)
         .then((results) => {
           results.user.updateProfile({
-            displayName: info.name,
+            displayName: user.name,
           });
 
-          info.$router.push({ name: 'users' });
+          context.dispatch('createUser', user);
+          user.$router.push({ name: 'dash' });
         }).catch((e) => {
           alert(e.message);
         });
     },
-    signIn(context, info) {
+    signIn(context, user) {
       firebase
         .auth()
-        .signInWithEmailAndPassword(info.email, info.password)
-        .then(function () {
-          info.$router.push({ name: 'users' });
+        .signInWithEmailAndPassword(user.email, user.password)
+        .then(() => {
+          user.$router.push({ name: 'dash' });
         })
         .catch(function () {
           alert(
@@ -41,9 +42,35 @@ export default new Vuex.Store({
     auth() {
       return new Promise(resolve => {
         firebase.auth().onAuthStateChanged(user => {
-          if (user) resolve(true);
+          if (user) resolve(user);
         })
       });
+    },
+    createUser(context, user) {
+      const room = 'users';
+      firebase.database().ref(room).push({
+        name: user.name,
+        email: user.email,
+        wallet: 2000,
+      });
+    },
+    getUsers(context) {
+      return new Promise(resolve => {
+        const room = 'users';
+        firebase.database().ref(room).on('value', data => {
+          context.dispatch('auth').then((user) => {
+            if (data) {
+              let dataList = data.val();
+
+              for (let data in dataList) {
+                if (dataList[data].email === user.email) delete dataList[data];
+              }
+
+              resolve(dataList);
+            }
+          });
+        });
+      })
     }
   },
 });

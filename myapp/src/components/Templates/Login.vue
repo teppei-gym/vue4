@@ -11,6 +11,9 @@
     </div>
     <p v-if="errorMessage">{{ errorMessage }}</p>
     <button class="btn is-blue" @click="signIn()">Login</button>
+    <div>
+      <router-link :to="{ name: 'register' }">新規作成はこちらから</router-link>
+    </div>
   </div>
 </template>
 
@@ -20,17 +23,14 @@ export default {
     return {
       email: '',
       password: '',
-      errorMessage: '',
     };
   },
   methods: {
     signIn() {
       if (!this.email || !this.password) {
-        this.errorMessage = '未入力項目があります';
+        alert('未入力項目があります');
         return;
       }
-
-      this.errorMessage = '';
 
       this.$store.dispatch('signIn', this);
     },

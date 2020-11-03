@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Register from './components/Templates/Register'
 import Login from './components/Templates/Login'
-import Users from './components/Templates/Users'
+import Dashboard from './components/Templates/Dashboard'
 import firebase from 'firebase'
 import { config } from './firebase.config'
 
@@ -14,16 +14,17 @@ const router = new Router({
     {
       path: '/register',
       component: Register,
+      name: 'register'
     },
     {
-      path: '/',
+      path: '/login',
       component: Login,
       name: 'login'
     },
     {
-      path: '/users',
-      component: Users,
-      name: 'users'
+      path: '/',
+      component: Dashboard,
+      name: 'dash'
     }
   ],
 });
@@ -31,7 +32,7 @@ const router = new Router({
 firebase.initializeApp(config);
 
 router.beforeEach(function (to, from, next) {
-  if (to.path === '/') {
+  if (to.path === '/login' || to.path === '/register') {
     next();
     return
   }
