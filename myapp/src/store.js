@@ -17,8 +17,33 @@ export default new Vuex.Store({
 
           info.$router.push({ name: 'users' });
         }).catch((e) => {
-          console.log(e.message);
+          alert(e.message);
         });
+    },
+    signIn(context, info) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(info.email, info.password)
+        .then(function () {
+          info.$router.push({ name: 'users' });
+        })
+        .catch(function () {
+          alert(
+            'ログインに失敗しました。メールアドレスとパスワードを再度入力してください'
+          );
+        });
+    },
+    logout() {
+      // Todo
+      // firebase.auth().signOut();
+      // this.auth = false;
+    },
+    auth() {
+      return new Promise(resolve => {
+        firebase.auth().onAuthStateChanged(user => {
+          if (user) resolve(true);
+        })
+      });
     }
   },
-})
+});
