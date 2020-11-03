@@ -18,22 +18,22 @@
 export default {
   data() {
     return {
-      email: "",
-      password: "",
-      errorMessage: ""
+      email: '',
+      password: '',
+      errorMessage: '',
     };
   },
   methods: {
     signIn() {
       if (!this.email || !this.password) {
-        this.errorMessage = "未入力項目があります";
+        this.errorMessage = '未入力項目があります';
         return;
       }
 
-      this.errorMessage = "";
+      this.errorMessage = '';
 
-      this.$store.dispatch("signIn", this);
-    }
-  }
+      this.$store.dispatch('signIn', this);
+    },
+  },
 };
 </script>
