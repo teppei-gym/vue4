@@ -61,12 +61,16 @@ export default new Vuex.Store({
           context.dispatch('auth').then((user) => {
             if (data) {
               let dataList = data.val();
+              let currentUser = {};
 
               for (let data in dataList) {
-                if (dataList[data].email === user.email) delete dataList[data];
+                if (dataList[data].email === user.email) {
+                  currentUser = dataList[data];
+                  delete dataList[data];
+                }
               }
 
-              resolve(dataList);
+              resolve({ currentUser, dataList });
             }
           });
         });
