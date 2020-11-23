@@ -6,7 +6,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   actions: {
-    register(context, user) {
+    register({ dispatch }, user) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(user.email, user.password)
@@ -15,7 +15,7 @@ export default new Vuex.Store({
             displayName: user.name,
           });
 
-          context.dispatch('createUser', user);
+          dispatch('createUser', user);
           user.$router.push({ name: 'dash' });
         }).catch((e) => {
           alert(e.message);
