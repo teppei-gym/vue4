@@ -75,6 +75,46 @@ export default new Vuex.Store({
           });
         });
       })
+    },
+    getUser(context, userId) {
+      return new Promise(resolve => {
+        const room = 'users/' + userId;
+        firebase.database().ref(room).once('value', user => {
+          resolve(user.val());
+        });
+      })
+    },
+    update({ dispatch }, { recipientUserId, wallet, senderUserMail }) {
+      return new Promise(resolve => {
+        const room = 'users';
+        firebase.database()
+          .ref(room)
+          .orderByChild('email')
+          .startAt(senderUserMail)
+          .endAt(senderUserMail)
+          .once('value', data => {
+            const sender = data.val();
+            const senderId = Object.keys(sender).shift()
+
+            dispatch('getUser', recipientUserId).then(recipientUser => {
+              const recipientUpdatedWallet = Number(wallet) + Number(recipientUser.wallet);
+              firebase.database().ref(room).child(recipientUserId).update({
+                wallet: recipientUpdatedWallet
+              }).catch((error) => {
+                console.log('送り先' + error);
+              });
+            })
+
+            const senderUpdatedWallet = Number(sender[senderId].wallet) - Number(wallet);
+            firebase.database().ref(room).child(senderId).update({
+              wallet: senderUpdatedWallet
+            }).catch((error) => {
+              console.log('送り手' + error);
+            });
+          });
+
+        resolve();
+      });
     }
   },
 });
