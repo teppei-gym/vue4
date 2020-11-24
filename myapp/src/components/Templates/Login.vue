@@ -21,27 +21,27 @@
 export default {
   data() {
     return {
-      email: "",
-      password: "",
-      message: ""
+      email: '',
+      password: '',
+      message: '',
     };
   },
   methods: {
     signIn() {
       if (!this.email || !this.password) {
-        this.message = "未入力項目があります";
+        this.message = '未入力項目があります';
         return;
       } else {
-        this.message = "";
+        this.message = '';
       }
 
-      this.$store.dispatch("signIn", this);
-    }
+      this.$store.dispatch('signIn', this);
+    },
   },
   computed: {
     errorMessage() {
       return this.message;
-    }
-  }
+    },
+  },
 };
 </script>
