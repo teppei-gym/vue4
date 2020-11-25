@@ -9,8 +9,11 @@
       <label for="password">password</label>:
       <input id="password" type="password" v-model="password" />
     </div>
-    <p v-if="errorMessage">{{ errorMessage }}</p>
+    <p>{{ errorMessage }}</p>
     <button class="btn is-blue" @click="signIn()">Login</button>
+    <div>
+      <router-link :to="{ name: 'register' }">新規作成はこちらから</router-link>
+    </div>
   </div>
 </template>
 
@@ -20,19 +23,24 @@ export default {
     return {
       email: '',
       password: '',
-      errorMessage: '',
+      message: '',
     };
   },
   methods: {
     signIn() {
       if (!this.email || !this.password) {
-        this.errorMessage = '未入力項目があります';
+        this.message = '未入力項目があります';
         return;
+      } else {
+        this.message = '';
       }
 
-      this.errorMessage = '';
-
       this.$store.dispatch('signIn', this);
+    },
+  },
+  computed: {
+    errorMessage() {
+      return this.message;
     },
   },
 };

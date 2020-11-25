@@ -1,30 +1,11 @@
 <template>
   <div id="app">
-    <template v-if="auth">
-      <button class="btn is-blue" @click="logout()">ログアウト</button>
-    </template>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      auth: false,
-    };
-  },
-  methods: {
-    logout() {
-      console.log('todo');
-    },
-  },
-  created() {
-    this.$store.dispatch('auth').then((status) => {
-      if (status) this.auth = status;
-    });
-  },
-};
+export default {};
 </script>
 
 <style>
