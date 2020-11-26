@@ -29,11 +29,7 @@
               </button>
             </td>
             <td>
-              <button
-                class="button is-info"
-                @click="confirm"
-                :data-user-id="key"
-              >
+              <button class="button is-info" :data-user-id="key">
                 送る
               </button>
             </td>
@@ -44,29 +40,7 @@
     <!-- modal -->
     <transition name="fade" type="animation">
       <div v-if="sendShow">
-        <div class="modal">
-          <div class="modal-wrap">
-            <div class="modal-content">
-              <div class="send-warp">
-                <div class="cancel-wrap">
-                  <span class="cancel" @click="cancel">✖︎</span>
-                </div>
-                <div class="send">
-                  <div>
-                    <p>あなたの残高：</p>
-                    <p>送る金額</p>
-                    <p>{{ validateMessage }}</p>
-                    <input type="text" v-model="sendWallet" />
-                  </div>
-                  <div class="input-wrap"></div>
-                </div>
-                <div class="submit-wrap">
-                  <button class="button is-denger" @click="send">送信</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- todo -->
       </div>
       <div v-if="walletShow">
         <div class="modal">
@@ -99,9 +73,6 @@ export default {
     return {
       sendShow: false,
       walletShow: false,
-      sendWallet: '',
-      validate: '',
-      recipientUserId: '',
       targetUserName: '',
       user: {},
       users: {},
@@ -112,38 +83,9 @@ export default {
     logout() {
       this.$store.dispatch('logout');
     },
-    confirm(e) {
-      this.sendShow = true;
-      this.targetUserName = '';
-      this.recipientUserId = e.target.dataset.userId;
-    },
     cancel() {
       this.sendShow = false;
       this.recipientUserId = '';
-    },
-    send() {
-      if (!Number(this.sendWallet)) {
-        this.validate = '半角かつ数字で入力してください。';
-        return;
-      }
-      // 初期化
-      this.validate = '';
-      if (this.user.wallet - this.sendWallet < 0) {
-        this.validate = '残高以上の金額を設定は送る事ができません。';
-      }
-      const _this = this;
-      const data = {
-        recipientUserId: _this.recipientUserId,
-        wallet: _this.sendWallet,
-        senderUserMail: _this.user.email,
-      };
-      this.$store.dispatch('update', data).then(() => {
-        this.$store.dispatch('getUsers').then(({ currentUser, dataList }) => {
-          this.user = currentUser;
-          this.users = dataList;
-        });
-        this.sendShow = false;
-      });
     },
     wallet(e) {
       const userId = e.target.dataset.userId;
