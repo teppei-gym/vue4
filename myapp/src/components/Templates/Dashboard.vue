@@ -22,6 +22,7 @@
               <button
                 class="button is-info"
                 @click="wallet"
+                :data-target-user-name="val.name"
                 :data-user-id="key"
               >
                 walletを見る
@@ -74,7 +75,7 @@
               <div class="send-warp">
                 <div class="send">
                   <div>
-                    <p>あなたの残高： {{ balance }}</p>
+                    <p>{{ userName }}の残高： {{ balance }}</p>
                   </div>
                   <div class="input-wrap"></div>
                 </div>
@@ -101,6 +102,7 @@ export default {
       sendWallet: '',
       validate: '',
       recipientUserId: '',
+      targetUserName: '',
       user: {},
       users: {},
       balance: {},
@@ -112,6 +114,7 @@ export default {
     },
     confirm(e) {
       this.sendShow = true;
+      this.targetUserName = '';
       this.recipientUserId = e.target.dataset.userId;
     },
     cancel() {
@@ -123,14 +126,11 @@ export default {
         this.validate = '半角かつ数字で入力してください。';
         return;
       }
-
       // 初期化
       this.validate = '';
-
       if (this.user.wallet - this.sendWallet < 0) {
         this.validate = '残高以上の金額を設定は送る事ができません。';
       }
-
       const _this = this;
       const data = {
         recipientUserId: _this.recipientUserId,
@@ -142,21 +142,19 @@ export default {
           this.user = currentUser;
           this.users = dataList;
         });
-
         this.sendShow = false;
       });
     },
     wallet(e) {
       const userId = e.target.dataset.userId;
+      this.targetUserName = e.target.dataset.targetUserName;
       this.$store.dispatch('getUser', userId).then((user) => {
         this.balance = user.wallet;
       });
-
       this.walletShow = true;
     },
   },
   computed: {
-    // 更新時に自動で認証userのwalletを更新したいので監視して実装を行ってみる
     userInfo() {
       return this.user;
     },
@@ -165,6 +163,9 @@ export default {
     },
     validateMessage() {
       return this.validate;
+    },
+    userName() {
+      return this.targetUserName;
     },
   },
   beforeCreate() {
