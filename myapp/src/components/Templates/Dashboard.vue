@@ -1,15 +1,10 @@
 <template>
   <div>
     <h2>
-<<<<<<< HEAD
       ようこそ {{ user.name }} さん<span>残高：{{ user.wallet }}</span>
       <template v-if="user">
         <button class="btn is-blue" @click="logout()">ログアウト</button>
       </template>
-=======
-      ようこそ {{ userInfo.name }} さん
-      <span>残高：{{ userInfo.wallet }}</span>
->>>>>>> task-6
     </h2>
     <h1>ユーザー一覧</h1>
     <!-- todo -->
