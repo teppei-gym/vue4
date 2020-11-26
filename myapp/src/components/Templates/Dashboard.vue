@@ -1,10 +1,10 @@
 <template>
   <div>
-    <template v-if="user">
-      <button class="btn is-blue" @click="logout()">ログアウト</button>
-    </template>
     <h2>
       ようこそ {{ user.name }} さん<span>残高：{{ user.wallet }}</span>
+      <template v-if="user">
+        <button class="btn is-blue" @click="logout()">ログアウト</button>
+      </template>
     </h2>
     <h1>ユーザー一覧</h1>
     <!-- todo -->
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     logout() {
-      console.log('todo');
+      this.$store.dispatch('logout');
     },
   },
   beforeCreate() {
@@ -54,6 +54,6 @@ export default {
 }
 
 h2 > span {
-  margin-left: 100px;
+  margin: 0 50px 0 100px;
 }
 </style>
