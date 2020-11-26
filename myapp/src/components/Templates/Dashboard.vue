@@ -7,7 +7,6 @@
       </template>
     </h2>
     <h1>ユーザー一覧</h1>
-    <!-- todo -->
     <div class="table-wrap">
       <table>
         <thead>
