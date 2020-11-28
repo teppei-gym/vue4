@@ -73,6 +73,14 @@ export default new Vuex.Store({
           });
         });
       })
-    }
+    },
+    getUser(context, userId) {
+      return new Promise(resolve => {
+        const room = 'users/' + userId;
+        firebase.database().ref(room).once('value', user => {
+          resolve(user.val());
+        });
+      })
+    },
   },
 });
