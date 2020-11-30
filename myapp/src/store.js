@@ -98,20 +98,19 @@ export default new Vuex.Store({
               const recipientUpdatedWallet = Number(wallet) + Number(recipientUser.wallet);
               firebase.database().ref(room).child(recipientUserId).update({
                 wallet: recipientUpdatedWallet
+              }).then(() => {
+                const senderUpdatedWallet = Number(sender[senderId].wallet) - Number(wallet);
+                firebase.database().ref(room).child(senderId).update({
+                  wallet: senderUpdatedWallet
+                }).then(() => resolve()
+                ).catch((error) => {
+                  console.log('送り手' + error);
+                });
               }).catch((error) => {
                 console.log('送り先' + error);
               });
             })
-
-            const senderUpdatedWallet = Number(sender[senderId].wallet) - Number(wallet);
-            firebase.database().ref(room).child(senderId).update({
-              wallet: senderUpdatedWallet
-            }).catch((error) => {
-              console.log('送り手' + error);
-            });
           });
-
-        resolve();
       });
     }
   },
