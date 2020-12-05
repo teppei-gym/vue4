@@ -64,6 +64,7 @@ export default new Vuex.Store({
               for (let data in dataList) {
                 if (dataList[data].email === user.email) {
                   currentUser = dataList[data];
+                  currentUser.id = data;
                   delete dataList[data];
                 }
               }
@@ -81,6 +82,28 @@ export default new Vuex.Store({
           resolve(user.val());
         });
       })
+    },
+    update({ dispatch }, { recipientUserId, wallet, senderUserId }) {
+      return new Promise(resolve => {
+        const room = 'users';
+        dispatch('getUser', senderUserId).then(sender => {
+          dispatch('getUser', recipientUserId).then(recipientUser => {
+            const recipientUpdatedWallet = Number(wallet) + Number(recipientUser.wallet);
+            const senderUpdatedWallet = Number(sender.wallet) - Number(wallet);
+            const senderPath = senderUserId + '/wallet';
+            const recipientPath = recipientUserId + '/wallet';
+
+            firebase.database().ref(room).update({
+              [senderPath]: senderUpdatedWallet,
+              [recipientPath]: recipientUpdatedWallet
+            }).then(() => {
+              resolve();
+            })
+          }).catch((error) => {
+            console.log(error);
+          });
+        })
+      });
     },
   },
 });
