@@ -64,6 +64,7 @@ export default new Vuex.Store({
               for (let data in dataList) {
                 if (dataList[data].email === user.email) {
                   currentUser = dataList[data];
+                  currentUser.id = data;
                   delete dataList[data];
                 }
               }
@@ -82,36 +83,27 @@ export default new Vuex.Store({
         });
       })
     },
-    update({ dispatch }, { recipientUserId, wallet, senderUserMail }) {
+    update({ dispatch }, { recipientUserId, wallet, senderUserId }) {
       return new Promise(resolve => {
         const room = 'users';
-        firebase.database()
-          .ref(room)
-          .orderByChild('email')
-          .startAt(senderUserMail)
-          .endAt(senderUserMail)
-          .once('value', data => {
-            const sender = data.val();
-            const senderId = Object.keys(sender).shift()
+        dispatch('getUser', senderUserId).then(sender => {
+          dispatch('getUser', recipientUserId).then(recipientUser => {
+            const recipientUpdatedWallet = Number(wallet) + Number(recipientUser.wallet);
+            const senderUpdatedWallet = Number(sender.wallet) - Number(wallet);
+            const senderPath = senderUserId + '/wallet';
+            const recipientPath = recipientUserId + '/wallet';
 
-            dispatch('getUser', recipientUserId).then(recipientUser => {
-              const recipientUpdatedWallet = Number(wallet) + Number(recipientUser.wallet);
-              firebase.database().ref(room).child(recipientUserId).update({
-                wallet: recipientUpdatedWallet
-              }).then(() => {
-                const senderUpdatedWallet = Number(sender[senderId].wallet) - Number(wallet);
-                firebase.database().ref(room).child(senderId).update({
-                  wallet: senderUpdatedWallet
-                }).then(() => resolve()
-                ).catch((error) => {
-                  console.log('送り手' + error);
-                });
-              }).catch((error) => {
-                console.log('送り先' + error);
-              });
+            firebase.database().ref(room).update({
+              [senderPath]: senderUpdatedWallet,
+              [recipientPath]: recipientUpdatedWallet
+            }).then(() => {
+              resolve();
             })
+          }).catch((error) => {
+            console.log(error);
           });
+        })
       });
-    }
+    },
   },
 });

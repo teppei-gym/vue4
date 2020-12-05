@@ -103,6 +103,7 @@ export default {
       validate: '',
       recipientUserId: '',
       user: {},
+      currentUserId: '',
       users: {},
       balance: {},
     };
@@ -134,7 +135,7 @@ export default {
       const data = {
         recipientUserId: _this.recipientUserId,
         wallet: _this.sendWallet,
-        senderUserMail: _this.user.email,
+        senderUserId: _this.user.id,
       };
       this.$store.dispatch('update', data).then(() => {
         this.$store.dispatch('getUsers').then(({ currentUser, dataList }) => {
